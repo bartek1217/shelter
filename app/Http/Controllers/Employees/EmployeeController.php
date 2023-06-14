@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Employees;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Employees\EmployeeStoreRequest;
-use App\Http\Requests\Employees\EmployeeUpdateRequest;
 use App\Models\Employee;
-use App\Services\Employee\EmployeeService;
+use App\Traits\JsonErrorsBuilder;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
+    use JsonErrorsBuilder;
+
     /**
      * @return JsonResponse
      */
@@ -34,11 +36,20 @@ class EmployeeController extends Controller
     }
 
     /**
-     * @param EmployeeStoreRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function store(EmployeeStoreRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'shelter_id' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json($this->makeJsonError($validator), 422);
+        }
+
         $data = $request->all();
         $data['uuid'] = Str::uuid()->toString();
         $employee = Employee::create($data);
@@ -48,11 +59,20 @@ class EmployeeController extends Controller
 
     /**
      * @param string $uuid
-     * @param EmployeeUpdateRequest $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function update(string $uuid, EmployeeUpdateRequest $request): JsonResponse
+    public function update(string $uuid, Request $request): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'shelter_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($this->makeJsonError($validator), 422);
+        }
+
         $data = $request->all();
         $employee = Employee::uuidFindOrFail($uuid);
         $employee->fill($data);

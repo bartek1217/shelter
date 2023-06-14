@@ -14,9 +14,6 @@ class Employee extends Model implements UuidContract
     protected $fillable = ['uuid', 'name', 'shelter_id'];
 
     /** @var array */
-    protected $guarded = [];
-
-    /** @var array */
     protected $hidden = [
         'id', 'deleted_at',
     ];
