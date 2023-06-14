@@ -1,2 +1,0 @@
-# shelter
-cat shelter
