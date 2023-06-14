@@ -12,4 +12,9 @@ Route::group(['as' => 'api.'], function () {
      */
     Route::apiResource('employees', \App\Http\Controllers\Employees\EmployeeController::class);
 
+    /**
+     * Shelters
+     */
+    Route::apiResource('shelters', \App\Http\Controllers\Shelters\ShelterController::class);
+
 });
