@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Route;
 Route::group(['as' => 'api.'], function () {
 
     /**
+     * Cats
+     */
+    Route::apiResource('cats', \App\Http\Controllers\Cats\CatController::class);
+
+    /**
      * Employees
      */
     Route::apiResource('employees', \App\Http\Controllers\Employees\EmployeeController::class);
