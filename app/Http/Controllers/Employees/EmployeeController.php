@@ -53,20 +53,23 @@ class EmployeeController extends Controller
      */
     public function update(string $uuid, EmployeeUpdateRequest $request): JsonResponse
     {
-        $employee = $service->update(Employee::uuidFindOrFail($uuid), $request->all());
+        $data = $request->all();
+        $employee = Employee::uuidFindOrFail($uuid);
+        $employee->fill($data);
 
-        return response()->json($employee, 204);
+        $employee->save();
+
+        return response()->json($employee);
     }
 
     /**
      * @param string $uuid
-     * @param EmployeeService $service
      * @return JsonResponse
      */
-    public function destroy(string $uuid, EmployeeService $service): JsonResponse
+    public function destroy(string $uuid): JsonResponse
     {
-        $service->delete(Employee::uuidFindOrFail($uuid));
+        Employee::uuidFindOrFail($uuid)->delete();
 
-        return api()->success(null, 204);
+        return response()->json(null, 204);
     }
 }
